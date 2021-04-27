@@ -15,12 +15,12 @@ async def on_ready():
     print("------------")
 
 
-@client.command()
+@client.command(aliases = ['latency'])
 async def ping(ctx):
     x = client.latency
     ping = x * 1000
     ping = int(ping)
-    await ctx.send(f'My ping is {ping}ms !')
+    await ctx.send(f'My latency is {ping}ms !')
 
 @client.command()
 async def say(ctx, *, words):
