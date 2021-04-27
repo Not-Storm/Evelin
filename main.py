@@ -1,12 +1,15 @@
 import discord
 import asyncio
 from discord.ext import commands
+from discord import embeds
 import os
 import requests
 import json
 
 client = commands.Bot(command_prefix = "-")
 # bot prefix "-"
+
+client.remove_command('help')
 
 @client.event
 async def on_ready():
@@ -38,7 +41,9 @@ def be_inspired():
 @client.command(aliases = ["inspire"])
 async def quote(ctx):
     the_qoute = be_inspired()
-    await ctx.send(the_qoute)
+    embed = discord.Embed(title="Quote" , description=the_qoute , color=discord.Color.blue())
+    embed.set_footer(text=ctx.author.name , icon_url = ctx.author.avatar_url) 
+    await ctx.send(embed=embed)
     #correct spelling is "quote"
 
 @client.command(aliases = ['game' , 'playing'])
@@ -50,5 +55,18 @@ async def presence(ctx , *, game):
         await ctx.send("Don't disturb me while I am playing with Storm-kun >:( ")
         await ctx.message.delete()
 
+
+@client.command()
+async def help(ctx):
+    embed = discord.Embed(title="Help" , color=discord.Color.red())
+    embed.set_footer(text=ctx.author.name , icon_url = ctx.author.avatar_url)
+    embed.set_thumbnail(url= client.user.avatar_url)
+
+
+    embed.add_field(name = "commands" , value = "ping")
+    embed.add_field(name = "description" , value = "Check bot latency" , inline=True)
+    embed.add_field(name = "aliases" , value = "latency" , inline=True)
+
+    await ctx.send(embed = embed)
 
 client.run(os.getenv('TOKEN'))
