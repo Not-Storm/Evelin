@@ -57,16 +57,24 @@ async def presence(ctx , *, game):
 
 
 @client.command()
-async def help(ctx):
-    embed = discord.Embed(title="Help" , color=discord.Color.red())
-    embed.set_footer(text=ctx.author.name , icon_url = ctx.author.avatar_url)
-    embed.set_thumbnail(url= client.user.avatar_url)
-
-
-    embed.add_field(name = "commands" , value = "ping")
-    embed.add_field(name = "description" , value = "Check bot latency" , inline=True)
-    embed.add_field(name = "aliases" , value = "latency" , inline=True)
-
-    await ctx.send(embed = embed)
+async def help(ctx , name : str = None):
+    help_dictionary = {
+        "ping"  : "Check bot latency \nAliases: Latency \nUsage: -ping",
+        "quote" : "Get a motivational quote \nAliases: inspire \nUsage: -quote",
+        "help"  : "get a list of all commmands \nAliases: None \nUsage: -help"
+        }
+    if name is None:
+        embed = discord.Embed(title="Help" , description = "help \nping \nquote" , color=discord.Color.red())
+        embed.set_footer(text=ctx.author.name , icon_url = ctx.author.avatar_url)
+        await ctx.send(embed = embed)
+    else:
+        if name in help_dictionary:
+            detail_embed = discord.Embed(title=name , description =help_dictionary[name] , color=discord.Color.red())
+            detail_embed.set_footer(text=ctx.author.name , icon_url = ctx.author.avatar_url)
+            await ctx.send(embed = detail_embed)
+        else:
+            error_embed = discord.Embed(title="error" , description = "Command not found" , color=discord.Color.red())
+            error_embed.set_footer(text=ctx.author.name , icon_url = ctx.author.avatar_url)
+            await ctx.send(embed = error_embed)
 
 client.run(os.getenv('TOKEN'))
