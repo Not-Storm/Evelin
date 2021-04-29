@@ -5,6 +5,7 @@ from discord import embeds
 import os
 import requests
 import json
+from discord import emoji
 
 client = commands.Bot(command_prefix = "-")
 # bot prefix "-"
@@ -55,26 +56,40 @@ async def presence(ctx , *, game):
         await ctx.send("Don't disturb me while I am playing with Storm-kun >:( ")
         await ctx.message.delete()
 
+@client.command()
+async def rgbvibe(ctx):
+    await ctx.send("<a:rgbvibe:837360386209742949>")
+    await ctx.message.delete()
+
+@client.command()
+async def angryahh(ctx):
+    await ctx.send("<a:angryahh:837365359749234740>")
+    await ctx.message.delete()
+
 
 @client.command()
 async def help(ctx , name : str = None):
     help_dictionary = {
         "ping"  : "Check bot latency \nAliases: Latency \nUsage: -ping",
         "quote" : "Get a motivational quote \nAliases: inspire \nUsage: -quote",
-        "help"  : "get a list of all commmands \nAliases: None \nUsage: -help"
+        "help"  : "get a list of all commmands \nAliases: None \nUsage: -help",
+        "rgbvibe" : "send the rgb vibe emote \nAliases: None \n Usage: -rgbvibe",
+        "angryahh" : "send the angry ahh emote\nAliases: None\nUsage: -angryahh"
         }
+        
     if name is None:
-        embed = discord.Embed(title="Help" , description = "help \nping \nquote" , color=discord.Color.red())
-        embed.set_footer(text=ctx.author.name , icon_url = ctx.author.avatar_url)
+        embed = discord.Embed(title="Help" , description = "**Misc** \nhelp \nping \nquote \n**Emotes** \nrgbvibe\nangryahh" , color=discord.Color.red())
+        embed.set_thumbnail(url = client.user.avatar_url)
+        embed.set_footer(text="do -help (command name) for detailed info" , icon_url = ctx.author.avatar_url)
         await ctx.send(embed = embed)
     else:
         if name in help_dictionary:
-            detail_embed = discord.Embed(title=name , description =help_dictionary[name] , color=discord.Color.red())
+            detail_embed = discord.Embed(title=name , description =help_dictionary[name] , color=discord.Color.blue())
             detail_embed.set_footer(text=ctx.author.name , icon_url = ctx.author.avatar_url)
             await ctx.send(embed = detail_embed)
         else:
             error_embed = discord.Embed(title="error" , description = "Command not found" , color=discord.Color.red())
-            error_embed.set_footer(text=ctx.author.name , icon_url = ctx.author.avatar_url)
+            error_embed.set_footer(text="do -help to see a list of all commands" , icon_url = ctx.author.avatar_url)
             await ctx.send(embed = error_embed)
 
 client.run(os.getenv('TOKEN'))
