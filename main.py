@@ -102,11 +102,11 @@ async def calc(ctx , op , num1 : float , num2 : float):
         await ctx.send(embed = noneanswer)
     elif op == "divide" or op == "by":
         fanswer = num1 / num2
-        canswer = discord.Embed(description = f"{num2} divided by {num1} will be {fanswer}" , color = discord.Color.orange())
+        canswer = discord.Embed(description = f"{num1} divided by {num2} will be {fanswer}" , color = discord.Color.orange())
         await ctx.send(embed = canswer)
     elif op == "remainder":
         ganswer = num1 % num2
-        bnswer = discord.Embed(description = f"{num2} divided {num1} will be {num1 / num2} and the remainder will be {ganswer}" , color = discord.Color.orange())
+        bnswer = discord.Embed(description = f"{num1} divided by {num2} will be {num1 / num2} and the remainder will be {ganswer}" , color = discord.Color.orange())
         await ctx.send(embed = bnswer)
     else:
         ferror = discord.Embed(description = "Function not found. List of functions is below\nadd\nsub\ninto/multiply\ndivide/by\nremainder" , color = discord.Color.orange())
