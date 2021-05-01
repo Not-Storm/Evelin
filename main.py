@@ -84,8 +84,47 @@ async def clear_error(ctx , error):
     if isinstance(error , commands.BadArgument):
         wembed = discord.Embed(description = "Please enter a integer to use this command" , color = discord.Color.purple())
         await ctx.send(embed = wembed)
-        
 
+
+@client.command(aliases = ["calculator"])
+async def calc(ctx , op , num1 : float , num2 : float):
+    if op == "add":
+        answer = num1 + num2
+        eanswer = discord.Embed(description = f"{num1} added to {num2} will be {answer}" , color = discord.Color.orange())
+        await ctx.send(embed = eanswer)
+    elif op == "sub":
+        sanswer = num1 - num2
+        qanswer = discord.Embed(description = f"{num2} subtracted from {num1} will be {sanswer}" , color = discord.Color.orange())
+        await ctx.send(embed = qanswer)
+    elif op == "into" or op == "multiply":
+        anyanswer = num1 * num2
+        noneanswer = discord.Embed(description = f"{num1} multiplied by {num2} will be {anyanswer}" , color = discord.Color.orange())
+        await ctx.send(embed = noneanswer)
+    elif op == "divide" or op == "by":
+        fanswer = num1 / num2
+        canswer = discord.Embed(description = f"{num2} divided by {num1} will be {fanswer}" , color = discord.Color.orange())
+        await ctx.send(embed = canswer)
+    elif op == "remainder":
+        ganswer = num1 % num2
+        bnswer = discord.Embed(description = f"{num2} divided {num1} will be {num1 / num2} and the remainder will be {ganswer}" , color = discord.Color.orange())
+        await ctx.send(embed = bnswer)
+    else:
+        ferror = discord.Embed(description = "Function not found. List of functions is below\nadd\nsub\ninto/multiply\ndivide/by\nremainder" , color = discord.Color.orange())
+        await ctx.send(embed = ferror)
+
+
+
+@calc.error
+async def calc_error(ctx , error):
+    if isinstance(error , commands.BadArgument):
+        badargument = discord.Embed(title = "integer not entered" , description = "Please enter numbers only\nUse the following format:\n-calc (function) (number 1) (number 2)\nExample: -calc add 1 2\n \nP.S. : put space after every argument" , color = discord.Color.green())
+        await ctx.send(embed = badargument)
+    if isinstance(error , commands.MissingRequiredArgument):
+        missingargument = discord.Embed(title = "missing argument" , description = "Please enter all required arguments\nUse the following format:\n-calc (function) (number 1) (number 2)\nExample: -calc add 1 2\n \nP.S. : put space after every argument" , color = discord.Color.green())
+        missingargument.set_footer(text = "do '-help calc' without the quotes to see list of all functions")
+        await ctx.send(embed = missingargument)
+
+        
 @client.command()
 async def help(ctx , name : str = None):
     help_dictionary = {
@@ -94,11 +133,17 @@ async def help(ctx , name : str = None):
         "help"  : "get a list of all commmands \nAliases: None \nUsage: -help",
         "rgbvibe" : "send the rgb vibe emote \nAliases: None \n Usage: -rgbvibe",
         "angryahh" : "send the angry ahh emote\nAliases: None\nUsage: -angryahh",
-        "purge" : "delete messages\nAliases: clear\nUsage: -purge (number of messages)\nRequirements: Manage messages",
+        "purge" : "delete messages\nAliases: clear\nUsage: -purge (number of messages)\nRequirements: Manage messages\nExample: -purge 10",
+        "calc" : "use a simple calculator\nAliases: calculator\nFunctions: add , sub , mutliply/into , divide/by , remainder\nUsage: -calc (function_name) (number_1) (number_2)\n \n P.S. : do -help (function_name) for more info",
+        "add" : "add two numbers\nAliases: None\nUsage: -calc add (number_1) (number2)\nExample: -calc add 1 2",
+        "sub" : "subtract two numbers\nAliases: None\nUsage: -calc sub (number_1) (number_2)\nExample: -calc sub 2 1",
+        "multiply"  and "into" : "multiply two numbers\nAliases: into\nUsage: -calc multiply (number_1) (number_2)\nExample: -calc multiply 2 2",
+        "divide" and "by" : "divide two numbers\nAliases: by\nUsage: -calc divide (number_1) (number_2)\nExample: -calc divide 4 2",
+        "remainder" : "get remainder after division\nAliases: None\nUsage: -calc remainder (number_1) (number_2)\Example: -calc remainder 5 2",
         }
         
     if name is None:
-        embed = discord.Embed(title="Help" , description = "**Misc** \n1.) help \n2.) ping \n3.) quote\n4.) purge \n**Emotes** \n1.) rgbvibe\n2.) angryahh" , color=discord.Color.red())
+        embed = discord.Embed(title="Help" , description = "**Misc** \n1.) help \n2.) ping \n3.) quote\n4.) purge \n5.) calc\n**Emotes** \n1.) rgbvibe\n2.) angryahh" , color=discord.Color.red())
         embed.set_thumbnail(url = client.user.avatar_url)
         embed.set_footer(text="do -help (command name) for detailed info" , icon_url = ctx.author.avatar_url)
         await ctx.send(embed = embed)
