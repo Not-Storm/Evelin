@@ -106,10 +106,11 @@ async def calc(ctx , op , num1 : float , num2 : float):
         await ctx.send(embed = canswer)
     elif op == "remainder":
         ganswer = num1 % num2
-        bnswer = discord.Embed(description = f"{num1} divided by {num2} will be {num1 / num2} and the remainder will be {ganswer}" , color = discord.Color.orange())
+        bnswer = discord.Embed(description = f"{num1} divided by {num2} will be {int(num1 / num2)} and the remainder will be {ganswer}" , color = discord.Color.orange())
         await ctx.send(embed = bnswer)
     else:
-        ferror = discord.Embed(description = "Function not found. List of functions is below\nadd\nsub\ninto/multiply\ndivide/by\nremainder" , color = discord.Color.orange())
+        ferror = discord.Embed(description = "Function not found. List of functions is below\n1.) add\n2.) sub\n3.) into/multiply\n4.) divide/by\n5.) remainder" , color = discord.Color.orange())
+        ferror.set_footer(text = "slash means alias for example: divide/by will mean 'by' is a alias of 'divide'")
         await ctx.send(embed = ferror)
 
 
