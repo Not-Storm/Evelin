@@ -6,6 +6,7 @@ import os
 import requests
 import json
 from discord import emoji
+import math
 
 client = commands.Bot(command_prefix = "-")
 # bot prefix "-"
@@ -82,50 +83,123 @@ async def clear_error(ctx , error):
         qembed = discord.Embed(description = "You don't have enough perms to use this command" , color = discord.Color.purple())
         await ctx.send(embed = qembed)
     if isinstance(error , commands.BadArgument):
-        wembed = discord.Embed(description = "Please enter a integer to use this command" , color = discord.Color.purple())
+        wembed = discord.Embed(description = "Please enter a number to use this command" , color = discord.Color.purple())
         await ctx.send(embed = wembed)
 
 
-@client.command(aliases = ["calculator"])
-async def calc(ctx , op , num1 : float , num2 : float):
-    if op == "add":
-        answer = num1 + num2
-        eanswer = discord.Embed(description = f"{num1} added to {num2} will be {answer}" , color = discord.Color.orange())
-        await ctx.send(embed = eanswer)
-    elif op == "sub":
-        sanswer = num1 - num2
-        qanswer = discord.Embed(description = f"{num2} subtracted from {num1} will be {sanswer}" , color = discord.Color.orange())
-        await ctx.send(embed = qanswer)
-    elif op == "into" or op == "multiply":
-        anyanswer = num1 * num2
-        noneanswer = discord.Embed(description = f"{num1} multiplied by {num2} will be {anyanswer}" , color = discord.Color.orange())
-        await ctx.send(embed = noneanswer)
-    elif op == "divide" or op == "by":
-        fanswer = num1 / num2
-        canswer = discord.Embed(description = f"{num1} divided by {num2} will be {fanswer}" , color = discord.Color.orange())
-        await ctx.send(embed = canswer)
-    elif op == "remainder":
-        ganswer = num1 % num2
-        bnswer = discord.Embed(description = f"{num1} divided by {num2} will be {int(num1 / num2)} and the remainder will be {ganswer}" , color = discord.Color.orange())
-        await ctx.send(embed = bnswer)
-    else:
-        ferror = discord.Embed(description = "Function not found. List of functions is below\n1.) add\n2.) sub\n3.) into/multiply\n4.) divide/by\n5.) remainder" , color = discord.Color.orange())
-        ferror.set_footer(text = "slash means alias for example: divide/by will mean 'by' is a alias of 'divide'")
-        await ctx.send(embed = ferror)
+@client.command()
+async def add(ctx , num1 : float , num2 : float):
+    embed = discord.Embed(title = 'answer' , description = f"{num1} + {num2} = {num1 + num2}")
+    await ctx.send(embed = embed)
 
-
-
-@calc.error
-async def calc_error(ctx , error):
+@add.error
+async def add_error(ctx , error):
     if isinstance(error , commands.BadArgument):
-        badargument = discord.Embed(title = "integer not entered" , description = "Please enter numbers only\nUse the following format:\n-calc (function) (number 1) (number 2)\nExample: -calc add 1 2\n \nP.S. : put space after every argument" , color = discord.Color.green())
+        badargument = discord.Embed(title = 'Bad argument' , description = "Please enter a number only \nFor example: -add 5 9\nThis will add the numbers 5 and 9")
+        badargument.set_footer(text = 'do -help add to see about the help command')
         await ctx.send(embed = badargument)
     if isinstance(error , commands.MissingRequiredArgument):
-        missingargument = discord.Embed(title = "missing argument" , description = "Please enter all required arguments\nUse the following format:\n-calc (function) (number 1) (number 2)\nExample: -calc add 1 2\n \nP.S. : put space after every argument" , color = discord.Color.green())
-        missingargument.set_footer(text = "do '-help calc' without the quotes to see list of all functions")
-        await ctx.send(embed = missingargument)
+        missingArgument = discord.Embed(title = "Missing required argument" , description = "Please enter all required arguments\n For example: -add 5 9\nThis will add the numbers 5 and 9")
+        missingArgument.set_footer(text = 'do -help add to see more info on command')
+        await ctx.send(embed = missingArgument)
 
-        
+@client.command()
+async def sub(ctx , num1 : float , num2 : float):
+    embed = discord.Embed(title = 'answer' , description = f"{num1} - {num2} = {num1 - num2}" , color = discord.Color.green())
+    await ctx.send(embed = embed)
+
+@sub.error
+async def sub_error(ctx , error):
+    if isinstance(error , commands.BadArgument):
+        badargument = discord.Embed(title = 'Bad argument' , description = "Please enter a number only \nFor example: -sub 5 9\nThis will subtract the numbers 5 and 9")
+        badargument.set_footer(text = 'do -help sub to see about the help command')
+        await ctx.send(embed = badargument)
+    if isinstance(error , commands.MissingRequiredArgument):
+        missingArgument = discord.Embed(title = "Missing required argument" , description = "Please enter all required arguments\n For example: -sub 5 9\nThis will subtract the numbers 5 and 9")
+        missingArgument.set_footer(text = 'do -help sub to see more info on command')
+        await ctx.send(embed = missingArgument)
+
+@client.command(aliases = ['into'])
+async def multiply(ctx , num1 : float , num2 : float):
+    embed = discord.Embed(title = 'answer' , description = f"{num1} * {num2} = {num1 * num2}" , color = discord.Color.green())
+    await ctx.send(embed = embed)
+
+@multiply.error
+async def multiply_error(ctx , error):
+    if isinstance(error , commands.BadArgument):
+        badargument = discord.Embed(title = 'Bad argument' , description = "Please enter a number only \nFor example: -multiply 5 9\nThis will multiply the numbers 5 and 9")
+        badargument.set_footer(text = 'do -help multiply to see about the help command')
+        await ctx.send(embed = badargument)
+    if isinstance(error , commands.MissingRequiredArgument):
+        missingArgument = discord.Embed(title = "Missing required argument" , description = "Please enter all required arguments\n For example: -multiply 5 9\nThis will multiply the numbers 5 and 9")
+        missingArgument.set_footer(text = 'do -help multiply to see more info on command')
+        await ctx.send(embed = missingArgument)
+
+@client.command()
+async def divide(ctx , num1 : float , num2 : float):
+    embed = discord.Embed(title = 'answer' , description = f"{num1} / {num2} = {num1 / num2}" , color = discord.Color.green())
+    await ctx.send(embed = embed)
+
+@divide.error
+async def divide_error(ctx , error):
+    if isinstance(error , commands.BadArgument):
+        badargument = discord.Embed(title = 'Bad argument' , description = "Please enter a number only \nFor example: -divide 5 9\nThis will divide the numbers 5 and 9")
+        badargument.set_footer(text = 'do -help divide to see about the help command')
+        await ctx.send(embed = badargument)
+    if isinstance(error , commands.MissingRequiredArgument):
+        missingArgument = discord.Embed(title = "Missing required argument" , description = "Please enter all required arguments\n For example: -divide 5 9\nThis will divide the numbers 5 and 9")
+        missingArgument.set_footer(text = 'do -help divide to see more info on command')
+        await ctx.send(embed = missingArgument)
+
+@client.command()
+async def remainder(ctx , num1 : float , num2 : float):
+    embed = discord.Embed(title = 'answer' , description = f"{num1} / {num2} , remainder = {num1 % num2}" , color = discord.Color.green())
+    await ctx.send(embed = embed)
+
+@remainder.error
+async def remainder_error(ctx , error):
+    if isinstance(error , commands.BadArgument):
+        badargument = discord.Embed(title = 'Bad argument' , description = "Please enter a number only \nFor example: -remainder 5 9\nThis will divide the numbers 5 and 9 and then give the remainder")
+        badargument.set_footer(text = 'do -help remainder to see about the help command')
+        await ctx.send(embed = badargument)
+    if isinstance(error , commands.MissingRequiredArgument):
+        missingArgument = discord.Embed(title = "Missing required argument" , description = "Please enter all required arguments\n For example: -divide 5 9\nThis will divide the numbers 5 and 9 and then give the remainder")
+        missingArgument.set_footer(text = 'do -help remainder to see more info on command')
+        await ctx.send(embed = missingArgument)
+
+@client.command()
+async def exponent(ctx , number : int , power : int):
+    ed = discord.Embed(title = 'answer' , description =f"{number} ^ {power} = {number ** power}" , color = discord.Color.purple())
+    await ctx.send(embed = ed)
+
+
+@exponent.error
+async def exponent_error(ctx , error):
+    if isinstance(error , commands.BadArgument):
+        em = discord.Embed(title = 'Bad argument' , description = 'Please enter numbers only\nFor example: -exponent 5 4\nThis will raise 5 to the power of 4' , color = discord.Color.purple())
+        em.set_footer(text = 'do -help exponent to see info about the command')
+        await ctx.send(embed = em)
+    if isinstance(error , commands.MissingRequiredArgument):
+        eb = discord.Embed(title = "Missing required argument" , description = 'Please enter numbers only\nFor example: -exponent 5 4 \nThis will raise 5 to power of 4 ' , color = discord.Color.purple())
+        eb.set_footer(text = 'do -help exponent to see info about the command')
+        await ctx.send(embed = eb)
+
+@client.command(aliases = ['root'])
+async def sqrt(ctx , num1 : int):
+    embed = discord.Embed(title = 'answer' , description = f"Root of {num1} is {math.sqrt(num1)}" , color = discord.Color.blue())
+    await ctx.send(embed = embed)
+
+@sqrt.error
+async def root_error(ctx , error):
+    if isinstance(error , commands.BadArgument):
+        em = discord.Embed(title = 'Bad argument' , description = 'Please enter a positive number only\nFor example: -sqrt 10\nThis will take a square root of 10' , color = discord.Color.purple())
+        em.set_footer(text = 'do -help sqrt to see about command')
+        await ctx.send(embed = em)
+    if isinstance(error , commands.MissingRequiredArgument):
+        eb = discord.Embed(title = 'Missing argument' , description = 'Please enter all required arguments\nFor example: -sqrt 10\nThis will take a square root of 10' , color = discord.Color.purple())
+        eb.set_footer(text = 'do -help sqrt to see about command')
+        await ctx.send(embed = eb)
+
 @client.command()
 async def help(ctx , name : str = None):
     help_dictionary = {
@@ -135,16 +209,17 @@ async def help(ctx , name : str = None):
         "rgbvibe" : "send the rgb vibe emote \nAliases: None \n Usage: -rgbvibe",
         "angryahh" : "send the angry ahh emote\nAliases: None\nUsage: -angryahh",
         "purge" : "delete messages\nAliases: clear\nUsage: -purge (number of messages)\nRequirements: Manage messages\nExample: -purge 10",
-        "calc" : "use a simple calculator\nAliases: calculator\nFunctions: add , sub , mutliply/into , divide/by , remainder\nUsage: -calc (function_name) (number_1) (number_2)\n \n P.S. : do -help (function_name) for more info",
-        "add" : "add two numbers\nAliases: None\nUsage: -calc add (number_1) (number2)\nExample: -calc add 1 2",
-        "sub" : "subtract two numbers\nAliases: None\nUsage: -calc sub (number_1) (number_2)\nExample: -calc sub 2 1",
-        "multiply"  and "into" : "multiply two numbers\nAliases: into\nUsage: -calc multiply (number_1) (number_2)\nExample: -calc multiply 2 2",
-        "divide" and "by" : "divide two numbers\nAliases: by\nUsage: -calc divide (number_1) (number_2)\nExample: -calc divide 4 2",
-        "remainder" : "get remainder after division\nAliases: None\nUsage: -calc remainder (number_1) (number_2)\Example: -calc remainder 5 2",
+        "add" : "add two numbers\nAliases: None\nUsage: -add (number_1) (number2)\nExample: -add 1 2",
+        "sub" : "subtract two numbers\nAliases: None\nUsage: -sub (number_1) (number_2)\nExample: -sub 2 1",
+        "multiply" : "multiply two numbers\nAliases: into\nUsage: -multiply (number_1) (number_2)\nExample: -multiply 2 2",
+        "divide" : "divide two numbers\nAliases: by\nUsage: -divide (number_1) (number_2)\nExample: -divide 4 2",
+        "remainder" : "get remainder after division\nAliases: None\nUsage: -remainder (number_1) (number_2)\nExample: -remainder 5 2",
+        "exponent" : "Raise a number to a power\nAliases: None\nUsage: -exponent (number_1) (number_2)\nExample: -exponent 5 2",
+        "sqrt" : "Take square root of a number\nAliases: root\nUsage: -sqrt (number_1)\nExample: -sqrt 4",
         }
         
     if name is None:
-        embed = discord.Embed(title="Help" , description = "**Misc** \n1.) help \n2.) ping \n3.) quote\n4.) purge \n5.) calc\n**Emotes** \n1.) rgbvibe\n2.) angryahh" , color=discord.Color.red())
+        embed = discord.Embed(title="Help" , description = "**Misc** \n1.) help \n2.) ping \n3.) quote\n4.) purge \n \n**Maths** \n1.) add\n2.) sub\n3.) multipy\n4.) divide\n5.) remainder\n6.) exponent\n7.) sqrt\n \n**Emotes** \n1.) rgbvibe\n2.) angryahh" , color=discord.Color.red())
         embed.set_thumbnail(url = client.user.avatar_url)
         embed.set_footer(text="do -help (command name) for detailed info" , icon_url = ctx.author.avatar_url)
         await ctx.send(embed = embed)
