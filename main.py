@@ -18,6 +18,7 @@ async def on_ready():
     print("Logged in as")
     print(client.user.name)
     print("------------")
+    await client.change_presence(activity=discord.Game(name= "with Storm-kun"))
 
 
 @client.command(aliases = ['latency'])
@@ -56,6 +57,27 @@ async def presence(ctx , *, game):
     else:
         disturbembed = discord.Embed(description = "don't disturb me while I am playing with Storm-kun >:(" , color = discord.Color.purple())
         await ctx.send(embed = disturbembed)
+        await ctx.message.delete()
+
+@client.command(aliases = ['hearing'])
+async def listening(ctx , *, game):
+    if ctx.author.id == 701664153613631539:
+        await client.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=game))
+        await ctx.message.delete()
+    else:
+        await ctx.send('it seems like i have no reason to obey you')
+        asyncio.sleep(3)
+        await ctx.message.delete()
+        
+
+@client.command(aliases = ['seeing'])
+async def watching(ctx , * , game):
+    if ctx.author.id == 701664153613631539:
+        await client.change_presence(activity = discord.Activity(type=discord.ActivityType.watching, name = game))
+        await ctx.message.delete()
+    else:
+        await ctx.send("Don't disturb me while i am watching something >:(")
+        asyncio.sleep(3)
         await ctx.message.delete()
 
 @client.command()
@@ -153,7 +175,7 @@ async def divide_error(ctx , error):
 
 @client.command()
 async def remainder(ctx , num1 : float , num2 : float):
-    embed = discord.Embed(title = 'answer' , description = f"{num1} / {num2} , remainder = {num1 % num2}" , color = discord.Color.green())
+    embed = discord.Embed(title = 'answer' , description = f"remainder = {num2 % num1}" , color = discord.Color.green())
     await ctx.send(embed = embed)
 
 @remainder.error
@@ -219,9 +241,9 @@ async def help(ctx , name : str = None):
         }
         
     if name is None:
-        embed = discord.Embed(title="Help" , description = "**Misc** \n1.) help \n2.) ping \n3.) quote\n4.) purge \n \n**Maths** \n1.) add\n2.) sub\n3.) multipy\n4.) divide\n5.) remainder\n6.) exponent\n7.) sqrt\n \n**Emotes** \n1.) rgbvibe\n2.) angryahh" , color=discord.Color.red())
+        embed = discord.Embed(title="Help" , description = "**Misc** \n1.) help \n2.) ping \n3.) quote\n4.) purge \n \n**Maths** \n1.) add\n2.) sub\n3.) multipy\n4.) divide\n5.) remainder\n6.) exponent\n7.) sqrt\n \n**Emotes** \n1.) rgbvibe\n2.) angryahh\n------------------------" , color=discord.Color.red())
         embed.set_thumbnail(url = client.user.avatar_url)
-        embed.set_footer(text="do -help (command name) for detailed info" , icon_url = ctx.author.avatar_url)
+        embed.set_footer(text="do -help (command name) for detailed info")
         await ctx.send(embed = embed)
     else:
         if name in help_dictionary:
